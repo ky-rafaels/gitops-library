@@ -733,39 +733,9 @@ data:
     path: /metrics
     port: 9090
   namespaceParallelism: "10"
-  persistence: |
-    connectionPool:
-      maxIdleConns: 100
-      maxOpenConns: 0
-      connMaxLifetime: 0s
-    nodeStatusOffLoad: true
-    archive: true
-    archiveTTL: 7d
-    postgresql:
-      host: postgres
-      port: 5432
-      database: postgres
-      tableName: argo_workflows
-      userNameSecret:
-        name: argo-postgres-config
-        key: username
-      passwordSecret:
-        name: argo-postgres-config
-        key: password
 kind: ConfigMap
 metadata:
   name: workflow-controller-configmap
----
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    app: postgres
-  name: argo-postgres-config
-stringData:
-  password: password
-  username: postgres
-type: Opaque
 ---
 apiVersion: v1
 kind: Secret
@@ -829,20 +799,6 @@ spec:
     targetPort: 9000
   selector:
     app: minio
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: postgres
-  name: postgres
-spec:
-  ports:
-  - port: 5432
-    protocol: TCP
-    targetPort: 5432
-  selector:
-    app: postgres
 ---
 apiVersion: v1
 kind: Service
@@ -956,43 +912,6 @@ spec:
             port: 9000
           initialDelaySeconds: 5
           periodSeconds: 10
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: postgres
-  name: postgres
-spec:
-  selector:
-    matchLabels:
-      app: postgres
-  template:
-    metadata:
-      labels:
-        app: postgres
-      name: postgres
-    spec:
-      containers:
-      - env:
-        - name: POSTGRES_PASSWORD
-          value: password
-        image: postgres:12-alpine
-        name: main
-        ports:
-        - containerPort: 5432
-        readinessProbe:
-          exec:
-            command:
-            - psql
-            - -U
-            - postgres
-            - -c
-            - SELECT 1
-          initialDelaySeconds: 15
-          timeoutSeconds: 2
-      nodeSelector:
-        kubernetes.io/os: linux
 ---
 apiVersion: apps/v1
 kind: Deployment
