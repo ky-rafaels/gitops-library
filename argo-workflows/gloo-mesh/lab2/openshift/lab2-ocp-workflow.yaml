@@ -1,12 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow 
 metadata:
-  generateName: lab2-ocp-
+  generateName: gm-lab2-ocp-
 spec:
-  entrypoint: kubectl 
+  entrypoint: meshctl 
   templates:
-  - name: kubectl
+  - name: meshctl
     container:
-      image: bitnami/kubectl
-      command: [kubectl]
-      args: ["version"]
+      image: willowmck/meshctl:latest
+      command: [meshctl]
+      args: ["cluster", "register", "-h"]

@@ -77,7 +77,17 @@ echo "Installing Gloo Mesh Enterprise"
 echo ""
 cat mgmt/mgmt-plane-install.yaml | sed -E 's/\$\$([A-Z]+)\$\$/${\1}/g' | envsubst > tmp-mgmt-plane-install.yaml
 kubectl apply -f tmp-mgmt-plane-install.yaml
+echo "Waiting for deployment to complete"
+kubectl rollout status deployment/dashboard -n gloo-mesh --context ${MGMT}
 
+echo "Registering remote agents via meshctl"
+ENDPOINT_GLOO_MESH=$(kubectl --context ${MGMT} -n gloo-mesh get svc enterprise-networking -o jsonpath='{.status.loadBalancer.ingress[0].*}'):9900
+HOST_GLOO_MESH=$(echo ${ENDPOINT_GLOO_MESH} | cut -d: -f1)
+echo "Gloo Mesh enterprise-networking exposed at ${HOST_GLOO_MESH}"
+meshctl cluster register --mgmt-context=${MGMT} --remote-context=${CLUSTER1} --relay-server-address=${ENDPOINT_GLOO_MESH} enterprise cluster1 --cluster-domain cluster.local --enterprise-agent-chart-values enterprise-agent-values.yaml
+meshctl cluster register --mgmt-context=${MGMT} --remote-context=${CLUSTER2} --relay-server-address=${ENDPOINT_GLOO_MESH} enterprise cluster2 --cluster-domain cluster.local --enterprise-agent-chart-values enterprise-agent-values.yaml
+echo "Finding registered clusters"
+kubectl --context ${MGMT} get kubernetescluster -n gloo-mesh
 
 # Cleanup
 cleanup
