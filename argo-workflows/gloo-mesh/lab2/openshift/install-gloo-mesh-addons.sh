@@ -97,8 +97,8 @@ metadata:
   name: istio-cni
 EOF
 
-kubectl --context ${CLUSTER1} apply -f remote/enterprise-agent-addons.yaml
-kubectl --context ${CLUSTER2} apply -f remote/enterprise-agent-addons.yaml
+kubectl --context ${CLUSTER1} -n argocd apply -f remote/enterprise-agent-addons.yaml
+kubectl --context ${CLUSTER2} -n argocd apply -f remote/enterprise-agent-addons.yaml
 
 kubectl --context ${MGMT} apply -f remote/accesspolicy/accesspolicy.yaml
 
