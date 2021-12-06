@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gloo-mesh-enterprise
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: gloo-mesh
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: ''
+    repoURL: 'https://storage.googleapis.com/gloo-mesh-enterprise/gloo-mesh-enterprise'
+    targetRevision: 1.2.4
+    chart: gloo-mesh-enterprise
+    helm:
+      parameters:
+        - name: licenseKey
+          value: '${GLOO_MESH_LICENSE_KEY}'
+        - name: "version"
+          value: 1.2.4
+      values: |
+        rbac-webhook:
+          enabled: true
+          rbacWebhook:
+            floatingUserId: true
+          adminSubjects:
+            - kind: User
+              name: kubeadmin
+        enterprise-networking:
+          enterpriseNetworking:
+            floatingUserId: true
+          prometheus:
+            server:
+              securityContext: false
+        gloo-mesh-ui:
+          dashboard:
+            floatingUserId: true
+          redis-dashboard:
+            redisDashboard:
+              floatingUserId: true
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

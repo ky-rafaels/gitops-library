@@ -1,0 +1,3 @@
+# Automating the Gloo Mesh Registration Process
+
+This example uses a combination of ArgoCD and Argo Workflows to automate the Gloo Mesh installation and remote cluster registration process as outlined in the [workshops](https://github.com/solo-io/workshops/tree/master/gloo-mesh-openshift#lab-2---deploy-and-register-gloo-mesh-).  The script `automate-lab2.sh` does the hard work for you.  You will need the standard `mgmt`, `cluster1` and `cluster2` clusters available.  The script uses your exported GLOO_MESH_LICENSE_KEY to set the license key appropriately.  
