@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: enterprise-agent
+spec:
+  destination:
+    namespace: gloo-mesh
+    server: 'https://kubernetes.default.svc'
+  source:
+    repoURL: 'https://storage.googleapis.com/gloo-mesh-enterprise/enterprise-agent'
+    targetRevision: 1.2.4
+    chart: enterprise-agent-addons
+    helm:
+      values: |-
+        enterpriseAgent:
+          floatingUserId: true
+          enabled: false
+        rate-limiter:
+          enabled: true
+        ext-auth-service:
+          enabled: true
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
