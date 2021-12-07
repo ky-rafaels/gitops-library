@@ -89,5 +89,8 @@ meshctl cluster register --mgmt-context=${MGMT} --remote-context=${CLUSTER2} --r
 echo "Finding registered clusters"
 kubectl --context ${MGMT} get kubernetescluster -n gloo-mesh
 
+echo "Creating RoleBinding for argocd"
+kubectl --context ${MGMT} apply -f mgmt/argo/rolebinding.yaml
+
 # Cleanup
 cleanup
