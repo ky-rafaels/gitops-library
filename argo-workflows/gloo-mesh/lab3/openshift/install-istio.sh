@@ -24,6 +24,7 @@ EOF
 cleanup() {
     trap - SIGINT SIGTERM ERR EXIT
     rm tmp-*
+    rm -rf istio-*
 }
 
 setup_colors() {
@@ -77,6 +78,8 @@ echo "Setup namespaces"
 echo ""
 #oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-system
 #oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-operator
+
+ISTIO_VERSION=1.11.4 curl -L https://istio.io/downloadIstio | sh -
 
 kubectl --context ${CLUSTER1} -n argocd apply -f cluster1/istio.yaml
 kubectl --context ${CLUSTER2} -n argocd apply -f cluster2/istio.yaml
