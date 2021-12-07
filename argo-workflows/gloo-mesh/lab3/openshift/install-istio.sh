@@ -75,8 +75,8 @@ setup_colors
 # Script logic
 echo "Setup namespaces"
 echo ""
-oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-system
-oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-operator
+#oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-system
+#oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-operator
 
 kubectl --context ${CLUSTER1} -n argocd apply -f cluster1/istio.yaml
 kubectl --context ${CLUSTER2} -n argocd apply -f cluster2/istio.yaml
