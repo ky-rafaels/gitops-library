@@ -28,6 +28,8 @@ spec:
           adminSubjects:
             - kind: User
               name: "kube:admin"
+            - kind: User 
+              name: "system:serviceaccount:argocd:argocd-application-controller"
         enterprise-networking:
           enterpriseNetworking:
             floatingUserId: true
