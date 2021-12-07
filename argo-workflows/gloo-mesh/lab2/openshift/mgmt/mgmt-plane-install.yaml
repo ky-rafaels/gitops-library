@@ -25,6 +25,8 @@ spec:
           enabled: true
           rbacWebhook:
             floatingUserId: true
+            Env:
+              - RBAC_PERMISSIVE_MODE: true
           adminSubjects:
             - kind: User
               name: "kube:admin"
