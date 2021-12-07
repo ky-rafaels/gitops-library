@@ -27,7 +27,7 @@ spec:
             floatingUserId: true
           adminSubjects:
             - kind: User
-              name: kubeadmin
+              name: "kube:admin"
         enterprise-networking:
           enterpriseNetworking:
             floatingUserId: true
