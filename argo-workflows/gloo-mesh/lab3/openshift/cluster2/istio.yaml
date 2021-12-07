@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-operator
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: gloo-mesh
+    server: 'https://kubernetes.default.svc'
+  source:
+    repoURL: 'https://github.com/solo-io/gitops-library.git'
+    targetRevision: workflows
+    path: argo-workflows/gloo-mesh/lab3/openshift/cluster1/manifest
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
