@@ -12,7 +12,7 @@ spec:
   source:
     repoURL: 'https://github.com/solo-io/gitops-library.git'
     targetRevision: workflows
-    path: argo-workflows/gloo-mesh/separate-gateways/openshift/cluster1/istiod
+    path: argo-workflows/gloo-mesh/lab3/openshift/cluster1/manifest
   project: default
   syncPolicy:
     automated:

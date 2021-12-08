@@ -74,15 +74,24 @@ parse_params "$@"
 setup_colors
 
 # Script logic
-echo "Setup namespaces"
+echo "Setup security"
 echo ""
-#oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-system
-#oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-operator
+oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-system
+oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-operator
 
 ISTIO_VERSION=1.11.4 curl -L https://istio.io/downloadIstio | sh -
 
+# Initializing the operator
+echo "Initializing the operator"
+echo ""
+./istio-1.11.4/bin/istioctl operator init --context ${CLUSTER1}
+
 kubectl --context ${CLUSTER1} -n argocd apply -f cluster1/istio.yaml
+kubectl --context ${CLUSTER1} -n argocd apply -f cluster1/istio-gateways.yaml
+
+./istio-1.11.4/bin/istioctl operator init --context ${CLUSTER2}
 kubectl --context ${CLUSTER2} -n argocd apply -f cluster2/istio.yaml
+kubectl --context ${CLUSTER2} -n argocd apply -f cluster2/istio-gateways.yaml
 
 kubectl rollout status deployment/istio-ingressgateway -n istio-system --context ${CLUSTER1}
 kubectl rollout status deployment/istio-ingressgateway -n istio-system --context ${CLUSTER2}

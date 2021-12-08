@@ -1,0 +1,61 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: istiocontrolplane-istiod
+  namespace: istio-system
+spec:
+  profile: openshift
+  meshConfig:
+    trustDomain: cluster1
+    accessLogFile: /dev/stdout
+    enableAutoMtls: true
+    defaultConfig:
+      envoyMetricsService:
+        address: enterprise-agent.gloo-mesh:9977
+      envoyAccessLogService:
+        address: enterprise-agent.gloo-mesh:9977
+      proxyMetadata:
+        ISTIO_META_DNS_CAPTURE: "true"
+        ISTIO_META_DNS_AUTO_ALLOCATE: "true"
+        GLOO_MESH_CLUSTER_NAME: cluster1
+  values:
+    cni:
+      excludeNamespaces:
+       - istio-system
+       - kube-system
+       - metallb-system
+      logLevel: info
+      cniBinDir: /var/lib/cni/bin
+      cniConfDir: /etc/cni/multus/net.d
+      chained: false
+      cniConfFileName: "istio-cni.conf"
+    sidecarInjectorWebhook:
+      injectedAnnotations:
+        k8s.v1.cni.cncf.io/networks: istio-cni
+    global:
+      meshID: mesh1
+      multiCluster:
+        clusterName: cluster1
+      network: network1
+      meshNetworks:
+        network1:
+          endpoints:
+          - fromRegistry: cluster1
+          gateways:
+          - registryServiceName: istio-ingressgateway.istio-system.svc.cluster.local
+            port: 443
+        vm-network:
+  components:
+    cni:
+      enabled: true
+      namespace: kube-system
+    ingressGateways:
+    - name: istio-ingressgateway
+      enabled: false
+    - name: myspecialgateway
+      enabled: false
+    pilot:
+      k8s:
+        env:
+          - name: PILOT_SKIP_VALIDATE_TRUST_DOMAIN
+            value: "true"
