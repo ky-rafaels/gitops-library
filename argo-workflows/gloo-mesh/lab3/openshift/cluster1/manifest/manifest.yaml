@@ -15,8 +15,8 @@ spec:
       envoyAccessLogService:
         address: enterprise-agent.gloo-mesh:9977
       proxyMetadata:
-#         ISTIO_META_DNS_CAPTURE: "true"
-#         ISTIO_META_DNS_AUTO_ALLOCATE: "true"
+        ISTIO_META_DNS_CAPTURE: "true"
+        ISTIO_META_DNS_AUTO_ALLOCATE: "true"
         GLOO_MESH_CLUSTER_NAME: cluster1
   values:
     cni:
