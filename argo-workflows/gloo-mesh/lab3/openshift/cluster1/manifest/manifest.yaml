@@ -5,7 +5,7 @@ metadata:
   namespace: istio-system
 spec:
   profile: openshift
-  tag: 1.11.5
+  tag: 1.12.1
   meshConfig:
     trustDomain: cluster1
     accessLogFile: /dev/stdout
