@@ -81,8 +81,13 @@ echo ""
 
 ISTIO_VERSION=1.11.4 curl -L https://istio.io/downloadIstio | sh -
 
+./istio-1.11.4/bin/istioctl --context ${CLUSTER1} operator init
+./istio-1.11.4/bin/istioctl --context ${CLUSTER2} operator init
+
 kubectl --context ${CLUSTER1} -n argocd apply -f cluster1/istio.yaml
 kubectl --context ${CLUSTER2} -n argocd apply -f cluster2/istio.yaml
+
+sleep 20
 
 kubectl rollout status deployment/istio-ingressgateway -n istio-system --context ${CLUSTER1}
 kubectl rollout status deployment/istio-ingressgateway -n istio-system --context ${CLUSTER2}
