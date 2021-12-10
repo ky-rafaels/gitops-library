@@ -42,7 +42,7 @@ spec:
           endpoints:
           - fromRegistry: cluster1
           gateways:
-          - registryServiceName: istio-ingressgateway.istio-system.svc.cluster.local
+          - registryServiceName: istio-ingressgateway.istio-gateways.svc.cluster.local
             port: 443
         vm-network:
   components:
