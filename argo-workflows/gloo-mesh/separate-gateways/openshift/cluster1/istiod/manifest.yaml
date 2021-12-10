@@ -38,14 +38,14 @@ spec:
       multiCluster:
         clusterName: cluster1
       network: network1
-      # meshNetworks:
-      #   network1:
-      #     endpoints:
-      #     - fromRegistry: cluster1
-      #     gateways:
-      #     - registryServiceName: istio-ingressgateway.istio-system.svc.cluster.local
-      #       port: 443
-      #   vm-network:
+      meshNetworks:
+        network1:
+          endpoints:
+          - fromRegistry: cluster1
+          gateways:
+          - registryServiceName: istio-ingressgateway.istio-system.svc.cluster.local
+            port: 443
+        vm-network:
   components:
     cni:
       enabled: true
