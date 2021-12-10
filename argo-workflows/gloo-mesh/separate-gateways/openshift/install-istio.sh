@@ -78,18 +78,22 @@ echo "Setup security"
 echo ""
 oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-system
 oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-operator
+oc --context ${CLUSTER1} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-gateways
+oc --context ${CLUSTER2} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-system
+oc --context ${CLUSTER2} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-operator
+oc --context ${CLUSTER2} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-gateways
 
 ISTIO_VERSION=1.11.4 curl -L https://istio.io/downloadIstio | sh -
 
 # Initializing the operator
 echo "Initializing the operator"
 echo ""
-./istio-1.11.4/bin/istioctl operator init --context ${CLUSTER1}
+./istio-1.11.4/bin/istioctl operator init --context ${CLUSTER1} --watchedNamespaces=isto-system,istio-gateways
 
 kubectl --context ${CLUSTER1} -n argocd apply -f cluster1/istio.yaml
 kubectl --context ${CLUSTER1} -n argocd apply -f cluster1/istio-gateways.yaml
 
-./istio-1.11.4/bin/istioctl operator init --context ${CLUSTER2}
+./istio-1.11.4/bin/istioctl operator init --context ${CLUSTER2} --watchedNamespaces=isto-system,istio-gateways
 kubectl --context ${CLUSTER2} -n argocd apply -f cluster2/istio.yaml
 kubectl --context ${CLUSTER2} -n argocd apply -f cluster2/istio-gateways.yaml
 
@@ -97,8 +101,10 @@ kubectl rollout status deployment/istio-ingressgateway -n istio-system --context
 kubectl rollout status deployment/istio-ingressgateway -n istio-system --context ${CLUSTER2}
 
 echo "Creating routes for ingress"
-oc --context ${CLUSTER1} -n istio-system expose svc/istio-ingressgateway --port=http2
-oc --context ${CLUSTER2} -n istio-system expose svc/istio-ingressgateway --port=http2
+oc --context ${CLUSTER1} -n istio-gateways expose svc/istio-ingressgateway --port=http2
+oc --context ${CLUSTER1} -n istio-gateways expose svc/myspecialgateway --port=http2
+oc --context ${CLUSTER2} -n istio-gateways expose svc/istio-ingressgateway --port=http2
+oc --context ${CLUSTER2} -n istio-gateways expose svc/myspecialgateway --port=http2
 
 
 # Cleanup
