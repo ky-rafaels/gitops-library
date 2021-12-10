@@ -7,7 +7,6 @@ spec:
   profile: openshift
   meshConfig:
     trustDomain: cluster1
-    tag: 1.11.4
     accessLogFile: /dev/stdout
     enableAutoMtls: true
     defaultConfig:
