@@ -86,6 +86,7 @@ HOST_GLOO_MESH=$(echo ${ENDPOINT_GLOO_MESH} | cut -d: -f1)
 echo "Gloo Mesh enterprise-networking exposed at ${HOST_GLOO_MESH}"
 meshctl cluster register --mgmt-context=${MGMT} --remote-context=${CLUSTER1} --relay-server-address=${ENDPOINT_GLOO_MESH} enterprise cluster1 --cluster-domain cluster.local --enterprise-agent-chart-values enterprise-agent-values.yaml
 meshctl cluster register --mgmt-context=${MGMT} --remote-context=${CLUSTER2} --relay-server-address=${ENDPOINT_GLOO_MESH} enterprise cluster2 --cluster-domain cluster.local --enterprise-agent-chart-values enterprise-agent-values.yaml
+
 echo "Finding registered clusters"
 kubectl --context ${MGMT} get kubernetescluster -n gloo-mesh
 
