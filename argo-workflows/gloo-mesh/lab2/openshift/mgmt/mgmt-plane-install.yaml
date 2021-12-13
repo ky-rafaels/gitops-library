@@ -12,14 +12,14 @@ spec:
   source:
     path: ''
     repoURL: 'https://storage.googleapis.com/gloo-mesh-enterprise/gloo-mesh-enterprise'
-    targetRevision: 1.2.4
+    targetRevision: 1.2.7
     chart: gloo-mesh-enterprise
     helm:
       parameters:
         - name: licenseKey
           value: '${GLOO_MESH_LICENSE_KEY}'
         - name: "version"
-          value: 1.2.4
+          value: 1.2.7
       values: |
         rbac-webhook:
           enabled: true
@@ -41,6 +41,7 @@ spec:
         gloo-mesh-ui:
           dashboard:
             floatingUserId: true
+            relayClientAuthority: "a12941234ca8b446abc2fd6a6d47cd85-807617263.us-west-1.elb.amazonaws.com"
           redis-dashboard:
             redisDashboard:
               floatingUserId: true
