@@ -30,12 +30,12 @@ sed -i -e "s/<INSERT_LICENSE_KEY_HERE>/${license_key}/g" gloo-mesh/argo/${gloo_m
 cd argocd
 ./install-argocd.sh default ${mgmt_context}
 ./install-argocd.sh default ${cluster1_context}
-#./install-argocd.sh default ${cluster2_context}
+./install-argocd.sh default ${cluster2_context}
 
 # wait for argo cluster rollout
 ../tools/wait-for-rollout.sh deployment argocd-server argocd 10 ${mgmt_context}
 ../tools/wait-for-rollout.sh deployment argocd-server argocd 10 ${cluster1_context}
-#../tools/wait-for-rollout.sh deployment argocd-server argocd 10 ${cluster2_context}
+../tools/wait-for-rollout.sh deployment argocd-server argocd 10 ${cluster2_context}
 
 # install gloo-mesh on mgmt
 cd ../gloo-mesh/
@@ -46,16 +46,16 @@ kubectl apply -f argo/${gloo_mesh_overlay}/gloo-mesh-ee-helm-openshift.yaml --co
 # install istio on ${cluster1_context} and ${cluster2_context}
 cd ../istio
 kubectl apply -f argo/deploy/${istio_overlay}/operator/istio-operator-${istio_overlay}.yaml --context ${cluster1_context}
-#kubectl apply -f argo/deploy/${istio_overlay}/operator/istio-operator-${istio_overlay}.yaml --context ${cluster2_context}
+kubectl apply -f argo/deploy/${istio_overlay}/operator/istio-operator-${istio_overlay}.yaml --context ${cluster2_context}
 
 ../tools/wait-for-rollout.sh deployment istio-operator istio-operator 10 ${cluster1_context}
-#../tools/wait-for-rollout.sh deployment istio-operator istio-operator 10 ${cluster2_context}
+../tools/wait-for-rollout.sh deployment istio-operator istio-operator 10 ${cluster2_context}
 
 kubectl apply -f argo/deploy/${istio_overlay}/gm-istio-profiles/gm-istio-openshift-cluster1.yaml --context ${cluster1_context}
-#kubectl apply -f argo/deploy/${istio_overlay}/gm-istio-profiles/gm-istio-openshift-cluster2.yaml --context ${cluster2_context}
+kubectl apply -f argo/deploy/${istio_overlay}/gm-istio-profiles/gm-istio-openshift-cluster2.yaml --context ${cluster2_context}
 
 ../tools/wait-for-rollout.sh deployment istiod istio-system 10 ${cluster1_context}
-#../tools/wait-for-rollout.sh deployment istiod istio-system 10 ${cluster2_context}
+../tools/wait-for-rollout.sh deployment istiod istio-system 10 ${cluster2_context}
 
 # set strict mtls
 #kubectl apply -f argo/deploy/mtls/strict-mtls.yaml --context ${cluster1_context}
@@ -65,8 +65,8 @@ kubectl apply -f argo/deploy/${istio_overlay}/gm-istio-profiles/gm-istio-openshi
 cd ../gloo-mesh/
 #./scripts/meshctl-register.sh ${mgmt_context} ${cluster1_context} ${meshctl_version}
 #./scripts/meshctl-register.sh ${mgmt_context} ${cluster2_context} ${meshctl_version}
-#./scripts/meshctl-register-helm-argocd.sh ${mgmt_context} ${cluster1_context} ${cluster2_context} ${gloo_mesh_version}
-./scripts/meshctl-register-helm-argocd-1-cluster-hostname.sh ${mgmt_context} ${cluster1_context} ${gloo_mesh_version}
+./scripts/meshctl-register-helm-argocd.sh ${mgmt_context} ${cluster1_context} ${cluster2_context} ${gloo_mesh_version}
+#./scripts/meshctl-register-helm-argocd-1-cluster-hostname.sh ${mgmt_context} ${cluster1_context} ${gloo_mesh_version}
 
 # deploy gloo-mesh dataplane addons
 kubectl apply -f argo/${gloo_mesh_overlay}/gloo-mesh-dataplane-addons.yaml --context ${cluster1_context}
@@ -79,8 +79,8 @@ kubectl apply -f argo/${gloo_mesh_overlay}/gloo-mesh-dataplane-addons.yaml --con
 kubectl apply -f argo/gloo-mesh-controlplane-config.yaml --context ${mgmt_context}
 
 # create virtualmesh
-kubectl apply -f argo/gloo-mesh-virtualmesh-rbac-enabled.yaml --context ${mgmt_context}
-#kubectl apply -f argo/gloo-mesh-virtualmesh-rbac-disabled.yaml --context ${mgmt_context}
+#kubectl apply -f argo/gloo-mesh-virtualmesh-rbac-enabled.yaml --context ${mgmt_context}
+kubectl apply -f argo/gloo-mesh-virtualmesh-rbac-disabled.yaml --context ${mgmt_context}
 
 # deploy bookinfo app into ${cluster1_context} and ${cluster2_context}
 cd ../bookinfo/
