@@ -81,37 +81,18 @@ cd ../gloo-mesh/
 #./scripts/meshctl-register-helm-argocd-1-cluster-hostname.sh ${mgmt_context} ${cluster1_context} ${gloo_mesh_version}
 
 # deploy gloo-mesh dataplane addons
-kubectl apply -f argo/${gloo_mesh_overlay}/gloo-mesh-dataplane-addons.yaml --context ${cluster1_context}
-kubectl apply -f argo/${gloo_mesh_overlay}/gloo-mesh-dataplane-addons.yaml --context ${cluster2_context}
+#kubectl apply -f argo/${gloo_mesh_overlay}/gloo-mesh-dataplane-addons.yaml --context ${cluster1_context}
+#kubectl apply -f argo/${gloo_mesh_overlay}/gloo-mesh-dataplane-addons.yaml --context ${cluster2_context}
 
-../tools/wait-for-rollout.sh deployment ext-auth-service gloo-mesh-addons 10 ${cluster1_context}
-../tools/wait-for-rollout.sh deployment ext-auth-service gloo-mesh-addons 10 ${cluster2_context}
+#../tools/wait-for-rollout.sh deployment ext-auth-service gloo-mesh-addons 10 ${cluster1_context}
+#../tools/wait-for-rollout.sh deployment ext-auth-service gloo-mesh-addons 10 ${cluster2_context}
 
 # deploy gloo-mesh controlplane addons (accesspolicy)
-kubectl apply -f argo/gloo-mesh-controlplane-config.yaml --context ${mgmt_context}
+#kubectl apply -f argo/gloo-mesh-controlplane-config.yaml --context ${mgmt_context}
 
 # create virtualmesh
 #kubectl apply -f argo/gloo-mesh-virtualmesh-rbac-enabled.yaml --context ${mgmt_context}
-kubectl apply -f argo/gloo-mesh-virtualmesh-rbac-disabled.yaml --context ${mgmt_context}
-
-# deploy bookinfo app into ${cluster1_context} and ${cluster2_context}
-cd ../bookinfo/
-kubectl apply -f argo/app/namespace/default/mesh/1.2.a-reviews-v1-v2.yaml --context ${cluster1_context}
-kubectl apply -f argo/app/namespace/default/mesh/1.3.a-reviews-all.yaml --context ${cluster2_context}
-
-../tools/wait-for-rollout.sh deployment productpage-v1 default 10 ${cluster1_context}
-../tools/wait-for-rollout.sh deployment productpage-v1 default 10 ${cluster2_context}
-
-# north/south ingress
-kubectl apply -f argo/config/domain/wildcard/gmg/north-south/1.1.b-route-cluster2.yaml --context ${mgmt_context}
-
-# east/west trafficpolicy
-kubectl apply -f argo/config/domain/wildcard/gmg/east-west/vhost-selector/1.3.a-ratelimit-vhost.yaml --context ${mgmt_context}
-
-# deploy bombardier loadgen on istio-ingressgateway on cluster1 and cluster2
-cd ../bombardier-loadgen
-kubectl apply -f argo/bookinfo-loadgen-istio-ingressgateway.yaml --context ${cluster1_context}
-kubectl apply -f argo/bookinfo-loadgen-istio-ingressgateway.yaml --context ${cluster2_context}
+#kubectl apply -f argo/gloo-mesh-virtualmesh-rbac-disabled.yaml --context ${mgmt_context}
 
 # echo port-forward commands
 echo
