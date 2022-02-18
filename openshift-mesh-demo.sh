@@ -92,7 +92,7 @@ cd ../gloo-mesh/
 
 # create virtualmesh
 #kubectl apply -f argo/gloo-mesh-virtualmesh-rbac-enabled.yaml --context ${mgmt_context}
-#kubectl apply -f argo/gloo-mesh-virtualmesh-rbac-disabled.yaml --context ${mgmt_context}
+kubectl apply -f argo/gloo-mesh-virtualmesh-rbac-disabled.yaml --context ${mgmt_context}
 
 # echo port-forward commands
 echo
