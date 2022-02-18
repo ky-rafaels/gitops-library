@@ -73,6 +73,8 @@ spec:
           value: gloo-mesh
         - name: authority
           value: enterprise-networking.gloo-mesh
+        - name: enterpriseAgent.floatingUserId
+          value: 'true'
   syncPolicy:
     automated:
       prune: false
@@ -110,6 +112,8 @@ spec:
           value: gloo-mesh
         - name: authority
           value: enterprise-networking.gloo-mesh
+        - name: enterpriseAgent.floatingUserId
+          value: 'true'
   syncPolicy:
     automated:
       prune: false
