@@ -37,6 +37,18 @@ cd argocd
 ../tools/wait-for-rollout.sh deployment argocd-server argocd 10 ${cluster1_context}
 ../tools/wait-for-rollout.sh deployment argocd-server argocd 10 ${cluster2_context}
 
+# add anyuid for every project used by istio
+oc --context ${cluster1_context} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-system
+oc --context ${cluster1_context} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-operator
+oc --context ${cluster1_context} adm policy add-scc-to-group anyuid system:serviceaccounts:bookinfo-v1
+oc --context ${cluster1_context} adm policy add-scc-to-group anyuid system:serviceaccounts:bookinfo-beta
+
+oc --context ${cluster2_context} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-system
+oc --context ${cluster2_context} adm policy add-scc-to-group anyuid system:serviceaccounts:istio-operator
+oc --context ${cluster2_context} adm policy add-scc-to-group anyuid system:serviceaccounts:bookinfo-v1
+oc --context ${cluster2_context} adm policy add-scc-to-group anyuid system:serviceaccounts:bookinfo-beta
+
+
 # install gloo-mesh on mgmt
 cd ../gloo-mesh/
 kubectl apply -f argo/${gloo_mesh_overlay}/gloo-mesh-ee-helm-openshift.yaml --context ${mgmt_context}
