@@ -7,6 +7,10 @@ gloo-fed:
 
 gloo-ee:
   create_license_secret: false
+  global:
+    extensions:
+      glooRedis:
+        enableAcl: false
   gloo-fed:
     enabled: false
     create_license_secret: false
@@ -14,6 +18,7 @@ gloo-ee:
       enable: false
   gloo:
     license_secret_name: "license"
+    
 
 
     
